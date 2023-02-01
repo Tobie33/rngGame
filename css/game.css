@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  font-family: sans-serif;
 }
 
 body {
@@ -27,7 +28,6 @@ body {
   height:10%;
   background-color:palevioletred;
   display:flex;
-  justify-content: flex-end;
 }
 
 #battlefield{
@@ -36,7 +36,6 @@ body {
   display:flex;
   justify-content: space-between;
   align-items: center;
-
 }
 
 #skills-box{
@@ -93,11 +92,25 @@ h2{
 }
 
 .decision {
-  width:60%;
-  background-color:greenyellow
+  width:45%;
+  background-color:greenyellow;
+  height:100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-size:18px;
+}
+
+#player-movement {
+  margin-bottom:0;
+}
+
+#ai-movement{
+  margin-bottom: 0;
 }
 
 .counter {
-  width:20%;
-  background-color:firebrick
+  width: 10%;
+  background-color:firebrick;
+  height: 100%
 }

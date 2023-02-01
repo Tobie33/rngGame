@@ -9,29 +9,33 @@ const $enemyCommentate = $("#ai-movement")
 const $playerAttackDescription = $("#player-attack-description")
 const $playerDefenseDescription = $("#player-defense-description")
 const $playerDodgeDescription = $("#player-dodge-description")
+const $playerHealthDisplay = $("#player-current-health")
+const $enemyHealthDisplay = $("#enemy-current-health")
+const $playerHPBar = $("#player-hpbar")
+const $enemyHPBar = $("#enemy-hpbar")
 
 const playerMaxHealth = 100
 const playerName = "Dismas"
 const aiName = "Drunktard"
-const genericMinVal = 1
-const genericMaxVal = 6
+const minValForAIMove = 1
+const maxValForAIMove = 3
 
 let playersCurrentHealth = 100
-let playerAttackVal = 10
+const playerAttackVal = 10
 let playerDefenseVal = 0
 let playerDodge = 0
-let playerDefenseMinPossibleVal = 1
-let playerDefenseMaxPossibleVal = 5
-let playerDodgeMinVal = 25
-let playerDodgeMaxVal = 50
+const playerDefenseMinPossibleVal = 1
+const playerDefenseMaxPossibleVal = 5
+const playerDodgeMinVal = 25
+const playerDodgeMaxVal = 50
 
 let enemyCurrentHealth = 100
-let enemyMaxHealth = 100
-let enemyAttackVal = 5
+const enemyMaxHealth = 100
+const enemyAttackVal = 8
 let enemyDefenseVal = 0
 let enemyDodge = 0
-let enemyDefenseMinPossibleVal = 0
-let enemyDefenseMaxPossibleVal = 5
+const enemyDefenseMinPossibleVal = 1
+const enemyDefenseMaxPossibleVal = 5
 
 let Level = 0
 // turn 0 = player's turn, turn 1 = ai's turn
@@ -42,7 +46,8 @@ $playerDefenseDescription.html(`Get a ${playerDefenseMinPossibleVal} - ${playerD
 $playerDodgeDescription.html(`Gain ${playerDodgeMinVal}% - ${playerDodgeMaxVal}% Dodge`)
 
 const getRandomNumForDodge = () => {
-  return Math.floor(Math.random() * 2)
+  const value = Math.floor(Math.random() * 2)
+  return value === 0 ? 25 : 50
 }
 
 const getRandomNum = (min,max) => {
@@ -51,13 +56,17 @@ const getRandomNum = (min,max) => {
 
 const checkTurn = () => {
   turn = turn === 0 ? 1 : 0
-  console.log(turn)
+  takeTurns()
 }
 
 const getRandomNumForAttack = () => {
-  let randomVal = Math.floor(Math.random() * 6)
-  let posOrNeg = Math.floor(Math.random() * 2)
-  return randomVal === 0 ? randomVal : posOrNeg === 0 ? randomVal : randomVal *  -1
+  const randomVal = Math.floor(Math.random() * 6)
+  const posOrNeg = Math.floor(Math.random() * 2)
+  if(randomVal === 0){
+    return randomVal
+  } else {
+    return randomVal * -1
+  }
 }
 
 const appearInstruction = () => {
@@ -69,21 +78,21 @@ const closeInstruction = () => {
   $instruction.hide()
 }
 
-const dodgeyMove = () => {
-  const additionalDodgeVal = getRandomNumForDodge()
-  if(turn === 0){
-    additionalDodgeVal === 0 ? playerDodge += 25 : playerDodge += 50
-    if(playerDodge > 50){
-      playerDodge = 50
-    }
-    $playerCommentate.html(`${playerName} is feeling dodgey! (${playerDodge}% to Dodge)`)
-  } else {
-    additionalDodgeVal === 0 ? enemyDodge += 25 : enemyDodge += 50
-    if(enemyDodge > 50){
-      enemyDodge = 50
-    }
-    $enemyCommentate.html(`${aiName} is feeling dodgey! (${enemyDodge}% to Dodge)`)
+const dodgeMoveForPlayer = () => {
+  playerDodge = getRandomNumForDodge()
+  if(playerDodge > 50){
+    playerDodge = 50
   }
+  $playerCommentate.html(`${playerName} is feeling dodgey! (${playerDodge}% to Dodge)`)
+  checkTurn()
+}
+
+const dodgeyMoveForAI = () => {
+  enemyDodge = getRandomNumForDodge()
+  if(enemyDodge > 50){
+    enemyDodge = 50
+  }
+  $enemyCommentate.html(`${aiName} is feeling dodgey! (${enemyDodge}% to Dodge)`)
   checkTurn()
 }
 
@@ -97,70 +106,96 @@ const dodgeCalculate = dodgeVal => {
 
 }
 
-const defenseMove = () => {
-  if(turn === 0){
-    let additionalDefenseVal = getRandomNum(playerDefenseMinPossibleVal,playerDefenseMaxPossibleVal)
-    playerDefenseVal += additionalDefenseVal
+const defenseMoveForPlayer = () => {
+    const finalDefenseVal = getRandomNum(playerDefenseMinPossibleVal,playerDefenseMaxPossibleVal)
+    playerDefenseVal += finalDefenseVal
     if(playerDefenseVal > playerDefenseMaxPossibleVal){
       playerDefenseVal = playerDefenseMaxPossibleVal
     }
     $playerCommentate.html(`${playerName} is buffed! (Gets a ${playerDefenseVal} Shield!)`)
-  } else {
-    let additionalDefenseVal = getRandomNum(enemyDefenseMinPossibleVal,enemyDefenseMaxPossibleVal)
-    enemyDefenseVal += additionalDefenseVal
+    checkTurn()
+}
+
+const defenseMoveForAI = () => {
+    const finalDefenseVal = getRandomNum(enemyDefenseMinPossibleVal,enemyDefenseMaxPossibleVal)
+    enemyDefenseVal += finalDefenseVal
     if(enemyDefenseVal > enemyDefenseMaxPossibleVal){
       enemyDefenseVal = enemyDefenseMaxPossibleVal
     }
     $enemyCommentate.html(`${aiName} is buffed! (Gets a ${enemyDefenseVal} Shield!)`)
-  }
+    checkTurn()
+}
+
+
+const attackMoveForAI = () => {
+  const additionAttackVal = getRandomNumForAttack()
+    let modifiedVal =  enemyAttackVal + additionAttackVal
+    if(playerDodge > 0 && dodgeCalculate(playerDodge)){
+      $playerCommentate.html(`Dodged!`)
+      playerDodge = 0
+    } else if (playerDefenseVal > 0){
+      modifiedVal -= playerDefenseVal
+      playerDefenseVal = 0
+        if(modifiedVal <= 0){
+          $playerCommentate.html(`Blocked!`)
+        } else {
+          playersCurrentHealth -= modifiedVal
+          $enemyCommentate.html(`${aiName} deals ${modifiedVal} Damage!`)
+          $playerHealthDisplay.html(playersCurrentHealth)
+          $playerHPBar.attr("style",`width: ${playersCurrentHealth}%`)
+        }
+      } else {
+        playersCurrentHealth -= modifiedVal
+        $enemyCommentate.html(`${aiName} deals ${modifiedVal} Damage!`)
+        $playerHealthDisplay.html(playersCurrentHealth)
+        $playerHPBar.attr("style",`width: ${playersCurrentHealth}%`)
+      }
   checkTurn()
 }
 
-const attackMove = (currentTurnAttackVal, opponentDodge, opponentDefense, name,currentTurnCommentate, opponentTurnCommentate) => {
-    const additionAttackVal = getRandomNumForAttack()
-    let modifiedVal =  currentTurnAttackVal + additionAttackVal
-    if(opponentDodge === 0){
-      if (opponentDefense === 0){
-        enemyCurrentHealth -= modifiedVal
-        currentTurnCommentate.html(`${name} deals ${modifiedVal} Damage!`)
-      } else if (opponentDefense > 0){
-        modifiedVal -= opponentDefense
-        opponentDefense *= 0
+const attackMoveForPlayer = () => {
+  const additionAttackVal = getRandomNumForAttack()
+    let modifiedVal =  playerAttackVal + additionAttackVal
+    if(enemyDodge > 0 && dodgeCalculate(enemyDodge)){
+      $enemyCommentate.html(`Dodged!`)
+      enemyDodge = 0
+    } else if (enemyDefenseVal > 0){
+      modifiedVal -= enemyDefenseVal
+      enemyDefenseVal = 0
         if(modifiedVal <= 0){
-          opponentTurnCommentate.html(`Blocked!`)
+          $enemyCommentate.html(`Blocked!`)
         } else {
           enemyCurrentHealth -= modifiedVal
-          currentTurnCommentate.html(`${name} deals ${modifiedVal} Damage!`)
+          $playerCommentate.html(`${playerName} deals ${modifiedVal} Damage!`)
+          $enemyHealthDisplay.html(enemyCurrentHealth)
+          $enemyHPBar.attr("style",`width: ${enemyCurrentHealth}%`)
+        }
+      } else {
+        enemyCurrentHealth -= modifiedVal
+        $playerCommentate.html(`${playerName} deals ${modifiedVal} Damage!`)
+        $enemyHealthDisplay.html(enemyCurrentHealth)
+        $enemyHPBar.attr("style",`width: ${enemyCurrentHealth}%`)
       }
-    }
-  } else if((dodgeCalculate(opponentDodge))){
-      opponentTurnCommentate.html(`Dodged!`)
-      opponentDodge *= 0
-  }
   checkTurn()
 }
 
-const aiDoingAIStuff = () => {
-  const decisiveStrike = getRandomNum(genericMinVal,genericMaxVal)
-  decisiveStrike <= 4 ? (initiateAttack) : decisiveStrike === 5 ? (defenseMove) : (dodgeyMove)
-}
 
-const initiateAttack = () => {
-  if(turn === 0){
-    attackMove(playerAttackVal,enemyDodge,enemyDefenseVal,playerName,$playerCommentate,$enemyCommentate)
+const aiDoingAIStuff = () => {
+  const decisiveStrike = getRandomNum(minValForAIMove,maxValForAIMove)
+
+  if(decisiveStrike === 1){
+    attackMoveForAI()
+  } else if (decisiveStrike === 2){
+    defenseMoveForAI()
   } else {
-    attackMove(enemyAttackVal,playerDodge,playerDefenseVal,aiName,$enemyCommentate,$playerCommentate)
+    dodgeyMoveForAI()
   }
 }
 
 const playerTurn = () => {
-  $attack.on("click",(initiateAttack))
-  $defense.on("click",(defenseMove))
-  $dodge.on("click",(dodgeyMove))
-}
-
-const takeTurns = () => {
-  turn === 0 ? playerTurn() : aiDoingAIStuff()
+  $attack.on("click",attackMoveForPlayer)
+  $defense.on("click",defenseMoveForPlayer)
+  $dodge.on("click",dodgeMoveForPlayer)
 }
 
 const mainPageManeuver = () => {
@@ -169,10 +204,13 @@ const mainPageManeuver = () => {
     $close.on("click",closeInstruction)
 }
 
+const takeTurns = () => {
+  turn === 0 ? playerTurn() : aiDoingAIStuff()
+}
 
 const init  = () => {
   mainPageManeuver()
-  takeTurns()
+  playerTurn()
 }
 
 init()

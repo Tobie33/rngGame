@@ -18,16 +18,16 @@
   <div id="background">
     <div id="status-bar">
       <div class="status" id="player-status">
-        <h2 class="header-with-spaces">Dismas - Highwayman</h2><h2 class="tighter-header">100</h2><h2 class="header-with-spaces">/100</h2>
+        <h2 class="header-with-spaces">Dismas - Highwayman</h2><h2 class="tighter-header" id="player-current-health">100</h2><h2 class="header-with-spaces">/100</h2>
         <div class="progress">
-          <div class="progress-bar bg-danger w-100" role="progressbar"  aria-label="Basic example" style="width: 0" aria-valuenow= 0" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar bg-danger" id="player-hpbar" role="progressbar"  aria-label="Basic example" style="width: 100%" aria-valuenow= 0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
       <button id="surrender" type="button">Surrender?</button>
       <div class="status" id="enemy-stauts">
-        <h2 class="tighter-header">100</h2><h2 class="header-with-spaces">/100</h2><h2 class="header-with-spaces">Bone Courtier - Skeleton</h2>
+        <h2 class="tighter-header" id="enemy-current-health">100</h2><h2 class="header-with-spaces">/100</h2><h2 class="header-with-spaces">Bone Courtier - Skeleton</h2>
         <div id="enemy-bar" class="progress">
-          <div class="progress-bar bg-danger w-100"role="progressbar"            aria-label="Basic example" style="width: 0%"
+          <div class="progress-bar bg-danger" id="enemy-hpbar" role="progressbar" aria-label="Basic example" style="width: 100%"
           aria-valuenow= 0" aria-valuemin="0" aria-valuemax="100">
           </div>
         </div>
