@@ -1,0 +1,103 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: aquamarine;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5% 0;
+}
+
+#background {
+  width: 75%;
+  height: 650px;
+  background-color: antiquewhite;
+}
+
+#status-bar{
+  height:15%;
+  background-color:orchid;
+  display:flex;
+  justify-content: space-between;
+}
+
+#movement{
+  height:10%;
+  background-color:palevioletred;
+  display:flex;
+  justify-content: flex-end;
+}
+
+#battlefield{
+  height:50%;
+  background-color:gold;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+#skills-box{
+  height:25%;
+  background-color:bisque;
+  display:flex;
+  justify-content:space-around;
+}
+
+.skills{
+  text-align:center;
+  border:2px solid black;
+  padding: 0 65px;
+  border-radius: 5px;
+}
+
+.skill-description{
+  padding:10px;
+  font-size:18px;
+}
+
+img{
+  width:150px;
+  height:200px;
+}
+
+h2{
+  display: inline-block;
+}
+
+  .tighter-header{
+    margin-right:-5px;
+  }
+
+.header-with-spaces{
+  display:inline-block;
+  padding: 0  10px 0 5px;
+}
+
+.progress{
+  margin-top:10px;
+}
+
+#enemy-bar{
+  display:flex;
+  flex-direction: row-reverse;
+}
+
+#surrender{
+  display:inline;
+  align-self: center;
+  font-size:18px;
+  padding:10px;
+}
+
+.decision {
+  width:60%;
+  background-color:greenyellow
+}
+
+.counter {
+  width:20%;
+  background-color:firebrick
+}
