@@ -18,14 +18,14 @@
   <div id="background">
     <div id="status-bar">
       <div class="status" id="player-status">
-        <h2 class="header-with-spaces">Dismas - Highwayman</h2><h2 class="tighter-header" id="player-current-health">100</h2><h2 class="header-with-spaces">/100</h2>
+        <div class="nameAndHealth"><h2 class="header-with-spaces">Dismas - Highwayman</h2><h2 class="tighter-header" id="player-current-health">100</h2><h2 class="header-with-spaces">/100</h2></div>
         <div class="progress">
           <div class="progress-bar bg-danger" id="player-hpbar" role="progressbar"  aria-label="Basic example" style="width: 100%" aria-valuenow= 0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
-      <button id="surrender" type="button">Surrender?</button>
+      <img id="torch" src="images/torch.gif">
       <div class="status" id="enemy-stauts">
-        <h2 class="tighter-header" id="enemy-current-health">100</h2><h2 class="header-with-spaces">/100</h2><h2 class="header-with-spaces">Bone Courtier - Skeleton</h2>
+        <div class="nameAndHealth"><h2 class="tighter-header" id="enemy-current-health">100</h2><h2 class="header-with-spaces">/</h2><h2 id="enemy-max-hp" class="enemy-tighter-header">100</h2><h2 class="header-with-spaces">Bone Courtier - Skeleton</h2></div>
         <div id="enemy-bar" class="progress">
           <div class="progress-bar bg-danger" id="enemy-hpbar" role="progressbar" aria-label="Basic example" style="width: 100%"
           aria-valuenow= 0" aria-valuemin="0" aria-valuemax="100">
@@ -35,25 +35,30 @@
     </div>
     <div id="movement">
       <div class="decision"><p id="player-movement"></p></div>
-      <div class="counter"><p id="turn-counter"></p></div>
+      <div class="counter"><p id="turn-counter">Game Starts!</p></div>
       <div class="decision"><p id="ai-movement"></p></div>
     </div>
     <div id="battlefield">
-      <img src="https://e7.pngegg.com/pngimages/926/192/png-clipart-darkest-dungeon-dark-souls-video-game-highwayman-dark-souls-game-orange.png">
-      <img src="https://www.clipartmax.com/png/middle/292-2927454_bone-courtier-darkest-dungeon-tempting-goblet.png">
+      <img id="player" src="images/player_idle.png">
+      <div id="pop-up">
+        <h2 id="pop-up-header"></h2>
+        <p id ="pop-up-passage"></p>
+        <div id="buttons">
+          <a href="index.html"><button class="pop-up-buttons" type="button">Fuck No</button></a>
+          <button class="pop-up-buttons" type="button" id="retry-button">I'll do it</button>
+        </div>
+      </div>
+      <img id="enemy" src="images/enemy_idle.png">
     </div>
     <div id="skills-box">
       <div class="skills" id="attack">
-        <h2>Attack</h2>
-        <p class = "skill-description" id="player-attack-description"></p>
+        <img class="skill-icon" src="images/attack_avatar.png">
       </div>
       <div class="skills" id="defense">
-        <h2>Defend</h2>
-        <p class = "skill-description" id="player-defense-description">Apply a 1 - 16 shield</p>
+        <img class="skill-icon" src="images/regen_avatar.png">
       </div>
       <div class="skills" id="dodge">
-        <h2>Dodge</h2>
-        <p class = "skill-description" id="player-dodge-description">25 - 75% to dodge</p>
+        <img class="skill-icon" src="images/dodge_avatar.webp">
       </div>
     </div>
   </div>
